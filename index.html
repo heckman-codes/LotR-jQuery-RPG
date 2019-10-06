@@ -10,17 +10,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Trirong&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div id="wrapper">
-        <h1>Star Wars RPG</h1>
+        <h1><img src="assets/images/lotr-logo.png"></h1>
         <h2>Choose your Character</h2>
         <div id="character-selection"></div>
         <h2>Enemies Available to Attack</h2>
         <div id="enemy-selection"></div>
         <h2>Fight Section</h2>
-        <button id="attack" onclick="Attack();">Attack</button>
+        <button id="attack">Attack</button>
         <h2>Defender</h2>
         <div id="defender-section"></div>
         <p id="attack-message"></p>
@@ -32,37 +33,51 @@
 
         $(document).ready(function () {
 
+
             var characters = [
-                jarjar = {
-                    name: "Jar Jar Binks",
+                aragorn = {
+                    name: "Aragorn",
                     hp: 200,
                     ap: 15,
-                    cp: 8
+                    cp: 8,
+                    pic: "assets/images/aragorn.png",
                 },
-                hanSolo = {
-                    name: "Han Solo",
+                sauron = {
+                    name: "Sauron",
                     hp: 120,
                     ap: 20,
-                    cp: 10
+                    cp: 10,
+                    pic: "assets/images/sauron.png",
                 },
-                bobaFett = {
-                    name: "Boba Fett",
+                witchKing = {
+                    name: "Witch King",
                     hp: 150,
                     ap: 15,
-                    cp: 5
+                    cp: 5,
+                    pic: "assets/images/witchking.png",
                 },
-                theCantinaBand = {
-                    name: "The Cantina Band",
+                gandalf = {
+                    name: "Gandalf",
                     hp: 100,
                     ap: 13,
-                    cp: 20
+                    cp: 20,
+                    pic: "assets/images/gandalf.png",
                 }
             ];
+            var yourCharacter;
+            var defendingCharacter;
+            var playerSelected = false;
+            var defenderSelected = false;
 
+            initializeGame();
 
+            // This resets the game display to the initial state
             function initializeGame() {
+
+                //Empties all divs that store characters
                 $("#character-selection, #defender-section, #enemy-selection").empty();
 
+                // Creates divs that hold each characters information
                 for (let i = 0; i < characters.length; i++) {
                     var character = $("<div>");
                     var characterName = $("<p>")
@@ -70,11 +85,12 @@
                     character.addClass("character");
                     $("#character-selection").append(character);
                     character.append(characterName);
-                    character.append(characterHp)
+                    character.append(characterHp);
+                    character.css("backgroundImage", "url(" + characters[i].pic + ")");
                     characterName.addClass("name-stat");
                     characterHp.addClass("hp-stat");
                     characterName.text(characters[i].name);
-                    characterHp.text(characters[i].hp);
+                    characterHp.text("Health Points: " + characters[i].hp);
                 }
             };
 
@@ -90,19 +106,35 @@
 
             $("#enemy-selection").on("click", ".enemies", function (e) {
                 $(this).removeClass("enemies").addClass("defender");
-                this.appendTo("#defender-section");
+                $(this).appendTo("#defender-section");
+                $("#enemies-section").remove();
             });
 
-            initializeGame();
-
+            // This is the 
             function attack() {
+                var yourCharacterAp = $(".your-character").data(characters.obj.ap);
+                var yourCharacterHp = $(".your-character").data(characters.obj.hp);
+                var defenderCharacterHp = $(".defender").data(characters.obj.hp);
+                var defenderCharacterCp = $(".defender").data(characters.obj.cp);
 
-            }
+                console.log($(".your-character").data(characters.indexOf(name).ap));
+                yourCharacterAp = yourCharacterAp + yourCharacterAp;
+                console.log(yourCharacterAp);
+                yourCharacterHp = yourCharacterHp - defenderCharacterCp;
+                console.log(yourCharacterHp);
+                defenderCharacterHp = defenderCharacterHp - yourCharacterAp;
+                console.log(defenderCharacterHp);
+            };
 
-            //Attack Button takes base attack
 
+            // This button resets the game display to the initial state
             $("#reset").on("click", function () {
                 initializeGame();
+
+            });
+
+            $("#attack").on("click", function () {
+                attack();
 
             });
 
