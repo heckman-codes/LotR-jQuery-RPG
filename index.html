@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Star Wars RPG</title>
+    <!-- Added link to the jQuery Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <div id="wrapper">
+        <h1>Star Wars RPG</h1>
+        <h2>Choose your Character</h2>
+        <div id="character-selection"></div>
+        <h2>Enemies Available to Attack</h2>
+        <div id="enemy-selection"></div>
+        <h2>Fight Section</h2>
+        <button id="attack" onclick="Attack();">Attack</button>
+        <h2>Defender</h2>
+        <div id="defender-section"></div>
+        <p id="attack-message"></p>
+        <p id="defense-message"></p>
+        <button id="reset">Reset Game</button>
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+
+            var characters = [
+                jarjar = {
+                    name: "Jar Jar Binks",
+                    hp: 200,
+                    ap: 15,
+                    cp: 8
+                },
+                hanSolo = {
+                    name: "Han Solo",
+                    hp: 120,
+                    ap: 20,
+                    cp: 10
+                },
+                bobaFett = {
+                    name: "Boba Fett",
+                    hp: 150,
+                    ap: 15,
+                    cp: 5
+                },
+                theCantinaBand = {
+                    name: "The Cantina Band",
+                    hp: 100,
+                    ap: 13,
+                    cp: 20
+                }
+            ];
+
+
+            function initializeGame() {
+                $("#character-selection, #defender-section, #enemy-selection").empty();
+
+                for (let i = 0; i < characters.length; i++) {
+                    var character = $("<div>");
+                    var characterName = $("<p>")
+                    var characterHp = $("<p>")
+                    character.addClass("character");
+                    $("#character-selection").append(character);
+                    character.append(characterName);
+                    character.append(characterHp)
+                    characterName.addClass("name-stat");
+                    characterHp.addClass("hp-stat");
+                    characterName.text(characters[i].name);
+                    characterHp.text(characters[i].hp);
+                }
+            };
+
+            $("#character-selection").on("click", ".character", function (c) {
+                $(this).removeClass("character").addClass("your-character");
+                $(".your-character").append(c.this);
+                $(".character").off("click").each(function () {
+                    $(".character").removeClass("character").addClass("enemies");
+                    $('#enemy-selection').append(this);
+                });
+                $('.characters').remove();
+            });
+
+            $("#enemy-selection").on("click", ".enemies", function (e) {
+                $(this).removeClass("enemies").addClass("defender");
+                this.appendTo("#defender-section");
+            });
+
+            initializeGame();
+
+            function attack() {
+
+            }
+
+            //Attack Button takes base attack
+
+            $("#reset").on("click", function () {
+                initializeGame();
+
+            });
+
+        });
+
+
+
+
+
+    </script>
+</body>
+
+</html>
