@@ -16,17 +16,23 @@
 <body>
     <div id="wrapper">
         <h1><img src="assets/images/lotr-logo.png"></h1>
-        <h2>Choose your Character</h2>
-        <div id="character-selection"></div>
+        <div id="container">
+            <div id=left-div>
+                <h2 id="header-text">Choose your Character</h2>
+                <div id="character-selection"></div>
+            </div>
+            <div id="right-div">
+                <h2 id="defender-text">Defender</h2>
+                <div id="defender-section"></div>
+            </div>
+        </div>
+        <h2>Fight Section</h2>
+        <p id="attack-message" class="message"></p>
+        <p id="defense-message" class="message"></p>
+        <button id="attack">Attack</button>
+        <button id="reset">Reset Game</button>
         <h2>Enemies Available to Attack</h2>
         <div id="enemy-selection"></div>
-        <h2>Fight Section</h2>
-        <button id="attack">Attack</button>
-        <h2>Defender</h2>
-        <div id="defender-section"></div>
-        <p id="attack-message"></p>
-        <p id="defense-message"></p>
-        <button id="reset">Reset Game</button>
     </div>
 
     <script>
@@ -34,40 +40,47 @@
         $(document).ready(function () {
 
 
-            var characters = [
-                aragorn = {
+            var characters = [];
+
+            function initializeCharacters() {
+                var aragorn = {
                     name: "Aragorn",
                     hp: 200,
                     ap: 15,
                     cp: 8,
                     pic: "assets/images/aragorn.png",
-                },
-                sauron = {
+                };
+                var sauron = {
                     name: "Sauron",
                     hp: 120,
                     ap: 20,
                     cp: 10,
                     pic: "assets/images/sauron.png",
-                },
-                witchKing = {
+                };
+                var witchKing = {
                     name: "Witch King",
                     hp: 150,
                     ap: 15,
                     cp: 5,
                     pic: "assets/images/witchking.png",
-                },
-                gandalf = {
+                };
+                var gandalf = {
                     name: "Gandalf",
                     hp: 100,
                     ap: 13,
                     cp: 20,
                     pic: "assets/images/gandalf.png",
-                }
-            ];
+                };
+                characters = [];
+                characters.push(aragorn, gandalf, witchKing, sauron);
+
+                baseAttack = 0;
+            }
+
+            var baseAttack = 0;
             var yourCharacter;
             var defendingCharacter;
-            var playerSelected = false;
-            var defenderSelected = false;
+
 
             initializeGame();
 
@@ -75,14 +88,20 @@
             function initializeGame() {
 
                 //Empties all divs that store characters
-                $("#character-selection, #defender-section, #enemy-selection").empty();
+                $("#character-selection, #defender-section, #enemy-selection, #attack-message, #defense-message").empty();
+
+                initializeCharacters();
+
+                $("#left-div").css("width", "100%");
+                $("#header-text").text("Choose your character");
+                $("#right-div").css("display", "none");
 
                 // Creates divs that hold each characters information
                 for (let i = 0; i < characters.length; i++) {
                     var character = $("<div>");
                     var characterName = $("<p>")
                     var characterHp = $("<p>")
-                    character.addClass("character");
+                    character.addClass("character").attr("id", characters[i].name);
                     $("#character-selection").append(character);
                     character.append(characterName);
                     character.append(characterHp);
@@ -95,48 +114,94 @@
             };
 
             $("#character-selection").on("click", ".character", function (c) {
+                for (let i = 0; i < characters.length; i++) {
+                    if (characters[i].name == this.id) {
+                        yourCharacter = characters[i];
+                        playerSelected = true;
+                        baseAttack = characters[i].ap;
+                        console.log(yourCharacter);
+                        console.log(baseAttack);
+                    }
+                }
                 $(this).removeClass("character").addClass("your-character");
                 $(".your-character").append(c.this);
+                $("#header-text").text(yourCharacter.name + " is your hero");
                 $(".character").off("click").each(function () {
                     $(".character").removeClass("character").addClass("enemies");
                     $('#enemy-selection').append(this);
                 });
                 $('.characters').remove();
+                $("#left-div").css("width", "50%");
+                $("#left-div").css("float", "left");
+                $("#right-div").css("display", "initial");
+                $("#right-div").css("width", "50%");
+                $("#right-div").css("float", "right");
             });
+
 
             $("#enemy-selection").on("click", ".enemies", function (e) {
-                $(this).removeClass("enemies").addClass("defender");
-                $(this).appendTo("#defender-section");
-                $("#enemies-section").remove();
-            });
-
-            // This is the 
-            function attack() {
-                var yourCharacterAp = $(".your-character").data(characters.obj.ap);
-                var yourCharacterHp = $(".your-character").data(characters.obj.hp);
-                var defenderCharacterHp = $(".defender").data(characters.obj.hp);
-                var defenderCharacterCp = $(".defender").data(characters.obj.cp);
-
-                console.log($(".your-character").data(characters.indexOf(name).ap));
-                yourCharacterAp = yourCharacterAp + yourCharacterAp;
-                console.log(yourCharacterAp);
-                yourCharacterHp = yourCharacterHp - defenderCharacterCp;
-                console.log(yourCharacterHp);
-                defenderCharacterHp = defenderCharacterHp - yourCharacterAp;
-                console.log(defenderCharacterHp);
-            };
-
-
-            // This button resets the game display to the initial state
-            $("#reset").on("click", function () {
-                initializeGame();
-
+                for (let i = 0; i < characters.length; i++) {
+                    if (characters[i].name == this.id) {
+                        defendingCharacter = characters[i];
+                        defenderSelected = true;
+                        console.log(defendingCharacter);
+                    }
+                }
+                if ($(".defender").length < 1) {
+                    $(this).removeClass("enemies").addClass("defender");
+                    $(this).appendTo("#defender-section");
+                    $("#enemies-section").remove();
+                }
+                $("#attack-message").empty();
+                $("#defense-message").empty();
             });
 
             $("#attack").on("click", function () {
                 attack();
-
             });
+
+            // This is the 
+            function attack() {
+                $("#attack-message").empty();
+                $("#defense-message").empty();
+
+                if ($(".defender").length == 0) {
+                    $("#attack-message").text("Choose a character to fight");
+                    return;
+                } else if (yourCharacter.hp > 0 && defendingCharacter.hp > 0); {
+                    baseAttack = baseAttack + yourCharacter.ap;
+                    yourCharacter.hp = yourCharacter.hp - defendingCharacter.cp;
+                    defendingCharacter.hp = defendingCharacter.hp - baseAttack;
+                    console.log(baseAttack);
+                    console.log("your char hp: " + yourCharacter.hp);
+                    console.log("defending char hp: " + defendingCharacter.hp);
+                };
+
+
+                $(".your-character").find(".hp-stat").text("Health Points: " + yourCharacter.hp);
+                $(".defender").find(".hp-stat").text("Health Points: " + defendingCharacter.hp);
+                $("#attack-message").text(yourCharacter.name + " did " + baseAttack + " damage to " + defendingCharacter.name);
+                $("#defense-message").text(defendingCharacter.name + " did " + defendingCharacter.cp + " damage to " + yourCharacter.name);
+
+                if (defendingCharacter.hp <= 0) {
+                    $(".defender").remove();
+                    $("#attack-message").text("You have defeated " + defendingCharacter.name + "!");
+                    $("#defense-message").empty();
+                }
+
+                if (($(".defender").length == 0) && ($(".enemies").length == 0) && (yourCharacter.hp > 0)) {
+                    $("#attack-message").text("You won!");
+                    return;
+                }
+
+
+
+                // This button resets the game display to the initial state
+                $("#reset").on("click", function () {
+                    initializeGame();
+                });
+
+            }
 
         });
 
