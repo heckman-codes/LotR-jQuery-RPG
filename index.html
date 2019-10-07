@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Star Wars RPG</title>
+    <title>Lord of the Rings RPG</title>
     <!-- Added link to the jQuery Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="assets/css/reset.css">
@@ -84,23 +84,24 @@
             var defendingCharacter;
 
 
-            initializeGame();
-
+            var audioIsPlaying = false;
 
             function playAudio() {
                 var audio = new Audio("assets/lotr-theme.mp3");
                 audio.play();
+                audioIsPlaying = true;
             }
 
-            playAudio();
+
+            initializeGame();
 
             // This resets the game display to the initial state
             function initializeGame() {
 
                 //Empties all divs that store characters
                 $("#character-selection, #defender-section, #enemy-selection, #attack-message, #defense-message").empty();
-
                 initializeCharacters();
+
 
                 $("#left-div").css("width", "100%");
                 $("#header-text").text("Choose your character");
@@ -126,6 +127,7 @@
                 }
             };
 
+
             $("#character-selection").on("click", ".character", function (c) {
                 for (let i = 0; i < characters.length; i++) {
                     if (characters[i].name == this.id) {
@@ -135,7 +137,11 @@
                         console.log(yourCharacter);
                         console.log(baseAttack);
                     }
+
+                } if (audioIsPlaying == false) {
+                    playAudio();
                 }
+
                 $(this).removeClass("character").addClass("your-character");
                 $(".your-character").append(c.this);
                 $("#header-text").text(yourCharacter.name + " is your hero");
@@ -149,9 +155,6 @@
                 $("#right-div").css("display", "initial");
                 $("#right-div").css("width", "50%");
                 $("#right-div").css("float", "right");
-                // $("#fight-section").css("position", "absolute");
-                // $("#fight-section").css("margin", "100px 320px");
-
             });
 
 
