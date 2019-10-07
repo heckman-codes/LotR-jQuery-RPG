@@ -24,6 +24,10 @@ body {
     height: 152px;
 }
 
+h1 {
+    margin-top: 50px;
+}
+
 h2 {
     color: white;
     font-family: 'Trirong', serif;
@@ -64,7 +68,7 @@ h2 {
     margin-right: 10px;
     cursor: pointer;
     text-align: center;
-    border: 1px solid red;
+    border: 1px solid orange;
 
 }
 .hp-stat, .name-stat {
@@ -104,15 +108,24 @@ h2 {
     text-align: center;
 }
 
-.defender {
-    background-color: orange;
+.defender  {
     width: 150px;
     height: 150px;
     border-radius: 10px;
-    border: 1px solid black;
+    border: 1px solid red;
     display: inline-block;
     /* float:left; */
     margin-right: 10px;
     cursor: pointer;
     text-align: center;
+}
+
+button {
+    font-family: 'Trirong', serif;
+    color: orange;
+    background-color: #333333;
+    border-color: orange;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
 }

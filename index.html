@@ -26,12 +26,14 @@
                 <div id="defender-section"></div>
             </div>
         </div>
-        <h2>Fight Section</h2>
-        <p id="attack-message" class="message"></p>
-        <p id="defense-message" class="message"></p>
-        <button id="attack">Attack</button>
-        <button id="reset">Reset Game</button>
-        <h2>Enemies Available to Attack</h2>
+        <div id="fight-section">
+            <h2>Fight Section</h2>
+            <button id="attack">Attack</button>
+            <button id="reset">Reset Game</button>
+            <p id="attack-message" class="message"></p>
+            <p id="defense-message" class="message"></p>
+            <h2>Enemies Available to Attack</h2>
+        </div>
         <div id="enemy-selection"></div>
     </div>
 
@@ -84,6 +86,14 @@
 
             initializeGame();
 
+
+            function playAudio() {
+                var audio = new Audio("assets/lotr-theme.mp3");
+                audio.play();
+            }
+
+            playAudio();
+
             // This resets the game display to the initial state
             function initializeGame() {
 
@@ -95,6 +105,9 @@
                 $("#left-div").css("width", "100%");
                 $("#header-text").text("Choose your character");
                 $("#right-div").css("display", "none");
+                $("#reset").css("display", "none");
+                $("#attack").css("display", "initial");
+
 
                 // Creates divs that hold each characters information
                 for (let i = 0; i < characters.length; i++) {
@@ -136,10 +149,17 @@
                 $("#right-div").css("display", "initial");
                 $("#right-div").css("width", "50%");
                 $("#right-div").css("float", "right");
+                // $("#fight-section").css("position", "absolute");
+                // $("#fight-section").css("margin", "100px 320px");
+
             });
 
 
             $("#enemy-selection").on("click", ".enemies", function (e) {
+
+                $("#attack-message").empty();
+                $("#defense-message").empty();
+
                 for (let i = 0; i < characters.length; i++) {
                     if (characters[i].name == this.id) {
                         defendingCharacter = characters[i];
@@ -147,14 +167,17 @@
                         console.log(defendingCharacter);
                     }
                 }
+                if ($(".defender").length == 1) {
+                    $("#attack-message").text("You can only choose one defender");
+                }
+
                 if ($(".defender").length < 1) {
                     $(this).removeClass("enemies").addClass("defender");
                     $(this).appendTo("#defender-section");
                     $("#enemies-section").remove();
                 }
-                $("#attack-message").empty();
-                $("#defense-message").empty();
             });
+
 
             $("#attack").on("click", function () {
                 attack();
@@ -191,17 +214,18 @@
 
                 if (($(".defender").length == 0) && ($(".enemies").length == 0) && (yourCharacter.hp > 0)) {
                     $("#attack-message").text("You won!");
+                    $("#reset").css("display", "initial");
+                    $("#attack").css("display", "none");
                     return;
                 }
 
 
 
-                // This button resets the game display to the initial state
-                $("#reset").on("click", function () {
-                    initializeGame();
-                });
-
-            }
+            };
+            // This button resets the game display to the initial state
+            $("#reset").on("click", function () {
+                initializeGame();
+            });
 
         });
 
