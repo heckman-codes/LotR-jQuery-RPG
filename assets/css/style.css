@@ -108,7 +108,13 @@ h2 {
     margin-right: 10px;
     cursor: pointer;
     text-align: center;
+    animation-name: example;
 }
+
+/* @keyframes example {
+    from {opacity: 0;}
+    to {opacity: 100;}
+  } */
 
 .defender  {
     width: 150px;
