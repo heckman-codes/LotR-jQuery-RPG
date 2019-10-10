@@ -3,30 +3,30 @@ var characters = [];
 function initializeCharacters() {
     var aragorn = {
         name: "Aragorn",
-        hp: 200,
-        ap: 15,
-        cp: 8,
+        hp: 120,
+        ap: 11,
+        cp: 27,
         pic: "./assets/images/aragorn.png",
     };
     var sauron = {
         name: "Sauron",
-        hp: 120,
+        hp: 170,
         ap: 20,
-        cp: 10,
+        cp: 24,
         pic: "./assets/images/sauron.png",
     };
     var witchKing = {
         name: "Witch King",
-        hp: 150,
+        hp: 120,
         ap: 15,
-        cp: 5,
+        cp: 13,
         pic: "./assets/images/witchking.png",
     };
     var gandalf = {
         name: "Gandalf",
-        hp: 100,
-        ap: 13,
-        cp: 20,
+        hp: 110,
+        ap: 9,
+        cp: 23,
         pic: "./assets/images/gandalf.png",
     };
     characters = [];
@@ -88,6 +88,7 @@ $("#character-selection").on("click", ".character", function (c) {
     for (let i = 0; i < characters.length; i++) {
         if (characters[i].name == this.id) {
             yourCharacter = characters[i];
+            Math.max(0, yourCharacter.hp);
             playerSelected = true;
             baseAttack = characters[i].ap;
             console.log(yourCharacter);
@@ -132,6 +133,7 @@ $("#enemy-selection").on("click", ".enemies", function (e) {
     for (let i = 0; i < characters.length; i++) {
         if (characters[i].name == this.id) {
             defendingCharacter = characters[i];
+            Math.max(0, defendingCharacter.hp);
             defenderSelected = true;
             console.log(defendingCharacter);
         }
@@ -170,36 +172,47 @@ function attack() {
         //This handles the math part
     } else if (yourCharacter.hp > 0 && defendingCharacter.hp > 0); {
         baseAttack = baseAttack + yourCharacter.ap;
-        yourCharacter.hp = yourCharacter.hp - defendingCharacter.cp;
-        defendingCharacter.hp = defendingCharacter.hp - baseAttack;
+        yourCharacter.hp = Math.max(0, (yourCharacter.hp - defendingCharacter.cp));
+        defendingCharacter.hp = Math.max(0, (defendingCharacter.hp - baseAttack));
         console.log(baseAttack);
         console.log("your char hp: " + yourCharacter.hp);
         console.log("defending char hp: " + defendingCharacter.hp);
-    };
-
-    //These look for elements within the character divs and modifies their values
-    $(".your-character").find(".hp-stat").text("Health Points: " + yourCharacter.hp);
-    $(".defender").find(".hp-stat").text("Health Points: " + defendingCharacter.hp);
+    }
 
     //This is the damage message you see between combatants
     $("#attack-message").text(yourCharacter.name + " did " + baseAttack + " damage to " + defendingCharacter.name);
     $("#defense-message").text(defendingCharacter.name + " did " + defendingCharacter.cp + " damage to " + yourCharacter.name);
 
     // If defender is dead remove it from the div
-    if (defendingCharacter.hp <= 0) {
+    if (yourCharacter.hp <= 0) {
+        $(".your-character").fadeTo(2000, "0");
+        $("#attack-message").text(defendingCharacter.name + " has defeated you.");
+        $("#defense-message").text("You lose!");
+        $("#reset").css("display", "initial");
+        $("#attack").css("display", "none");
+    } else if (defendingCharacter.hp <= 0) {
+        var extraHp = 25;
+        yourCharacter.hp = yourCharacter.hp + extraHp;
+        $(".defender").delay(2000).fadeTo(2000, "0");
         $(".defender").remove();
+        // $(".defender").delay(2000).remove();
         $("#attack-message").text("You have defeated " + defendingCharacter.name + "!");
-        $("#defense-message").empty();
+        $("#defense-message").text("As a winning bonus here's " + extraHp + "hp");
     }
 
     //If there is no defender, enemies to select, and your HP is above 0 you win!
     if (($(".defender").length == 0) && ($(".enemies").length == 0) && (yourCharacter.hp > 0)) {
         $("#attack-message").text("You won!");
+        $("#defense-message").empty();
         $("#reset").css("display", "initial");
         $("#attack").css("display", "none");
         return;
     }
 
+
+    //These look for elements within the character divs and modifies their values
+    $(".your-character").find(".hp-stat").text("Health Points: " + yourCharacter.hp);
+    $(".defender").find(".hp-stat").text("Health Points: " + defendingCharacter.hp);
 
 
 };
